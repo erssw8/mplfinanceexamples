@@ -180,6 +180,10 @@ def _valid_plot_kwargs():
                                                                       and isinstance(value[0],(float,int))
                                                                       and isinstance(value[1],(float,int)) },
 
+        'dpi'                       : { 'Default'     : None, # Set the resolution of the figure in dots-per-inch.
+                                        'Description' : 'Set the resolution of the figure in dots-per-inch',
+                                        'Validator'   : lambda value: isinstance(value,float) or isinstance(value,int) },
+ 
         'fontscale'                 : { 'Default'     : None, # scale all fonts up or down
                                         'Description' : 'Scale font sizes up (if > 1) or down (if < 1)',
                                         'Validator'   : lambda value: isinstance(value,float) or isinstance(value,int) },
@@ -442,6 +446,11 @@ def plot( data, **kwargs ):
         if config['figsize'] is not None:
             warnings.warn('\n\n ================================================================= '+
                           '\n\n   WARNING: `figsize` has NO effect in External Axes Mode.'+
+                          '\n\n ================================================================ ',
+                          category=UserWarning)
+        if config['dpi'] is not None:
+            warnings.warn('\n\n ================================================================= '+
+                          '\n\n   WARNING: `dpi` has NO effect in External Axes Mode.'+
                           '\n\n ================================================================ ',
                           category=UserWarning)
     else:
@@ -1012,6 +1021,8 @@ def _adjust_figsize(fig,config):
     else:
         fsize = config['figsize']
     fig.set_size_inches(fsize)
+    if not config['dpi'] is None:
+        fig.set_dpi(config['dpi'])
 
 def _adjust_fontsize(config):
     if config['fontscale'] is None:
